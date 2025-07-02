@@ -27,10 +27,33 @@ trackingDuration = timedelta(days = args.trackingDuration)
 
 baseURL = "https://www.googleapis.com/youtube/v3"
 
+def makeGetRequest(url, retries = 3, delay = 1, timeout = 5):
+
+    for attempt in range(1,retries + 1):
+        try:
+            res = requests.get(url, timeout = timeout)
+            res.raise_for_status()
+            return res.json()
+        
+        except requests.exceptions.HTTPError as httperr:
+            statusCode = httperr.response.status_code
+            if attempt < retries:
+                log.warning(f"Failed http request. http error {statusCode} \n Trying again in {delay}s.")
+            else:
+                log.error(f"Failed http request. http error {statusCode} \n Aborting request.")
+
+        except requests.exceptions.RequestException as err:
+            if attempt < retries:
+                log.warning(f"Failed http request: \n {err} \n Trying again in {delay}s.")
+                time.sleep(delay)
+            else:
+                log.error(f"Failed final attempt ({attempt}): \n {err}. \n Aborting request.")
+                exit()
+    
 
 def get_uploads_playlist_id(channel_id):
     url = f'{baseURL}/channels?part=contentDetails&id={channelID}&key={api_key}'
-    res = requests.get(url).json()
+    res = makeGetRequest(url)
     return res['items'][0]['contentDetails']['relatedPlaylists']['uploads']
 
 
@@ -39,7 +62,7 @@ def get_all_video_ids(playlist_id):
     url = f'{baseURL}/playlistItems?part=contentDetails&maxResults=50&playlistId={playlist_id}&key={api_key}'
     
     while url:
-        res = requests.get(url).json()
+        res = makeGetRequest(url)
 
         for item in res['items']:
             video_ids.append(item['contentDetails']['videoId'])
@@ -144,7 +167,7 @@ def get_video_trackerdata(video_ids):
     for i in range(0, len(video_ids), 50):
         ids = ','.join(video_ids[i:i+50])
         url = f'{baseURL}/videos?part=statistics,snippet&id={ids}&key={api_key}'
-        res = requests.get(url).json()
+        res = makeGetRequest(url)
         
         for video in res['items']:
             snippet = video['snippet']
