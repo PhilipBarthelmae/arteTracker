@@ -9,5 +9,5 @@ Contains title, videoID, url, publishedOn, description, duration of all uploaded
 
 
 ### Creates tracker.zip 
-Contains timestamp of data rerieval, videoID, viewCount, likeCount and commentCount of videos. 
-Data is collected hourly for videos younger than three weeks. Daily after.
+Zipped CSV that contains timestamp of data rerieval, videoID, viewCount, likeCount and commentCount of videos. 
+Data is collected hourly for videos less than three weeks old. Daily after.
