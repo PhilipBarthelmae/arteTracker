@@ -202,7 +202,7 @@ def get_video_trackerdata(video_ids):
 def trackStats():
 
     log.debug("Looking for Uploads playlist ID")
-    playlist_id = get_uploads_playlist_id(channel_id=channelID)
+    playlist_id = get_uploads_playlist_id(channel_id=channelID) 
     log.info(f"Found uploads playlist ID: {playlist_id}")
 
     log.debug(f"Looking for videos in playlist")

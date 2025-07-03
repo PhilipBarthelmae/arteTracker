@@ -1,10 +1,10 @@
 import subprocess as sp
 import pandas as pd
-import numpy as np
 import time
 from scripts.logger import log
 import os
 import schedule
+from scripts.sizeTracker import trackSize
 
 apiKey = "YOUR-YOUTUBE-DATA-API-V3-KEY-HERE"
 
@@ -45,10 +45,10 @@ if __name__ == '__main__':
     # Prevent wrapping or truncating based on screen width
     pd.set_option('display.width', None)
 
-
     #schedule Tasks
     schedule.every().day.at("23:00").do(takeSnaphot, apiKey, channelID)
-    schedule.every().hour.at(":14").do(track, apiKey, channelID)
+    schedule.every().day.at("23:30").do(trackSize)
+    schedule.every().hour.at(":00").do(track, apiKey, channelID)
     
     while True:
         schedule.run_pending()

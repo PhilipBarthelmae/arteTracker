@@ -26,9 +26,9 @@ def appendLibrary(df):
         currentLib.to_csv("Data/library.csv", index = False)
 
 def appendTracker(update):
-    tracker = pd.read_csv("tracker.zip")
+    tracker = pd.read_csv("Data/tracker.zip")
     tracker = pd.concat([update, tracker], ignore_index= True)
-    tracker.to_csv("tracker.zip", index=False)
+    tracker.to_csv("Data/tracker.zip", index=False)
 
 
 def cleanupSnapshots():
@@ -82,7 +82,7 @@ def cleanupTrackerUpdates():
                 files.append((ts,filename))
             except:
                 log.warning(f"Encountered trackerUpdate with unusual name: \n {filename}")
-                continue #skip files with non standart names
+                continue 
 
     files.sort()
 
@@ -115,9 +115,9 @@ if __name__ == "__main__":
         updateSize = len(trackerUpdate.index)
 
         #if tracker file does not exist
-        if not os.path.exists("tracker.zip"):
+        if not os.path.exists("Data/tracker.zip"):
             log.warning("Creating new tracker file")
-            trackerUpdate.to_csv("tracker.zip", index = False)
+            trackerUpdate.to_csv("Data/tracker.zip", index = False)
             sizeTrackerUpdate = len(trackerUpdate.index)
             log.info(f"Created Tracker file with {sizeTrackerUpdate} videos")
         else:
@@ -132,10 +132,10 @@ if __name__ == "__main__":
         file = f"Data/TrackerUpdates/{filename}.csv"
 
         #if tracker file does not exist
-        if not os.path.exists("tracker.zip"):
+        if not os.path.exists("Data/tracker.zip"):
             log.warning("Creating new tracker file")
             df = pd.read_csv(file)
-            df.to_csv("tracker.zip", index = False)
+            df.to_csv("Data/tracker.zip", index = False)
 
         else:
             update = pd.read_csv(file)
