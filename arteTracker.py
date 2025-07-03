@@ -1,7 +1,6 @@
 import subprocess as sp
 import pandas as pd
 import numpy as np
-from datetime import datetime
 import time
 from scripts.logger import log
 import os
@@ -36,6 +35,10 @@ if __name__ == '__main__':
         os.makedirs("Data/TrackerUpdates", exist_ok = True)
         log.warning("Created Data/TrackerUpdates directory")
 
+    if not os.path.exists("Data/Snapshots/Archive"):
+        os.makedirs("Data/Snapshots/Archive", exist_ok= True)
+        log.warning("Created Data/Snapshots/Archive directory")
+
     #for debugging
     # Show all columns (no horizontal cut-off)
     pd.set_option('display.max_columns', None)
@@ -45,7 +48,7 @@ if __name__ == '__main__':
 
     #schedule Tasks
     schedule.every().day.at("23:00").do(takeSnaphot, apiKey, channelID)
-    schedule.every().hour.at(":00").do(track, apiKey, channelID)
+    schedule.every().hour.at(":14").do(track, apiKey, channelID)
     
     while True:
         schedule.run_pending()
