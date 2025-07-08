@@ -23,7 +23,7 @@ color_formatter = colorlog.ColoredFormatter(
 console_handler.setFormatter(color_formatter)
 
 # File handler with timestamp
-file_handler = RotatingFileHandler("log.txt", mode='a', maxBytes = 2_000_000, backupCount = 5)
+file_handler = RotatingFileHandler("Data/log.txt", mode='a', maxBytes = 2_000_000, backupCount = 5)
 file_handler.setLevel(logging.INFO)
 plain_formatter = logging.Formatter(
     "%(asctime)s [%(levelname)s] %(message)s",
