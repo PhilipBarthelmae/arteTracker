@@ -173,6 +173,16 @@ def get_video_trackerdata(video_ids):
             snippet = video['snippet']
             stats = video.get('statistics', {})
 
+            #check if vid more than trackingDuration Old
+            publishDate = snippet.get("publishedAt")
+            #transform to german time
+            dt_utc = datetime.strptime(publishDate, "%Y-%m-%dT%H:%M:%SZ")
+            dt_utc = dt_utc.replace(tzinfo=ZoneInfo("UTC"))
+            dt_berlin = dt_utc.astimezone(ZoneInfo("Europe/Berlin"))
+            if dt_berlin < now - trackingDuration:
+                stop = True
+                break
+
             metadata.append({
                 'datetime': timestamp,
                 'videoID': video['id'],
@@ -182,14 +192,14 @@ def get_video_trackerdata(video_ids):
             })
 
             #terminate loop if last video is over trackingDuration old
-            if video == res['items'][-1]:
-                publishDate = snippet.get("publishedAt")
+            #if video == res['items'][-1]:
+                #publishDate = snippet.get("publishedAt")
                 #transform to german time
-                dt_utc = datetime.strptime(publishDate, "%Y-%m-%dT%H:%M:%SZ")
-                dt_utc = dt_utc.replace(tzinfo=ZoneInfo("UTC"))
-                dt_berlin = dt_utc.astimezone(ZoneInfo("Europe/Berlin"))
-                if dt_berlin < now - trackingDuration:
-                    stop = True
+                #dt_utc = datetime.strptime(publishDate, "%Y-%m-%dT%H:%M:%SZ")
+                #dt_utc = dt_utc.replace(tzinfo=ZoneInfo("UTC"))
+                #dt_berlin = dt_utc.astimezone(ZoneInfo("Europe/Berlin"))
+                #if dt_berlin < now - trackingDuration:
+                    #stop = True
         
         if stop: 
             break
